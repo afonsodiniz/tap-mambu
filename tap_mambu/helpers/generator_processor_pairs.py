@@ -27,6 +27,7 @@ from ..tap_processors.deposit_accounts_processor import DepositAccountsProcessor
 from ..tap_processors.deposit_cards_processor import DepositCardsProcessor
 from ..tap_processors.loan_accounts_processor import LoanAccountsProcessor
 from ..tap_processors.loan_repayments_processor import LoanRepaymentsProcessor
+from ..tap_processors.installments_processor import InstallmentsProcessor
 from ..tap_processors.processor import TapProcessor
 
 
@@ -48,7 +49,7 @@ def get_generator_processor_pairs():
         "groups": ((GroupsGenerator,), TapProcessor),
         "index_rate_sources": ((IndexRateSourcesGenerator,), TapProcessor),
         "deposit_transactions": ((DepositTransactionsGenerator,), TapProcessor),
-        "installments": ((InstallmentsGenerator,), TapProcessor),
+        "installments": ((InstallmentsGenerator,), InstallmentsProcessor),
         "interest_accrual_breakdown": ((InterestAccrualBreakdownGenerator,), TapProcessor),
         "loan_accounts": ((LoanAccountsLMGenerator, LoanAccountsADGenerator), LoanAccountsProcessor),
         "loan_products": ((LoanProductsGenerator,), TapProcessor),
