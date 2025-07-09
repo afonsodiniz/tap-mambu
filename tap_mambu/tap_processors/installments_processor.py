@@ -9,31 +9,35 @@ LOGGER = get_logger()
 
 class InstallmentsProcessor(TapProcessor):
     """
-    Custom processor for installments stream to ensure all installments are included,
+    Processor for installments, overriding the default _is_record_past_bookmark method to ensure
     including future installments with null lastPaidDate.
     """
 
     def _is_record_past_bookmark(self, transformed_record, bookmark_field):
         """
-        Override the default _is_record_past_bookmark method to ensure all installments
-        are included, regardless of lastPaidDate value.
+        Override the default _is_record_past_bookmark method to ensure we include all installments,
+        including future installments with null lastPaidDate.
         
-        For installments, we use dueDate as the bookmark field, but we need to make sure
-        we don't filter out records with null lastPaidDate (which are future installments).
+        This simplified version always returns True, effectively performing a full load
+        while still logging details for debugging purposes.
         """
         bookmark_field = convert(bookmark_field)  # Convert from camelCase to snake_case
-
-        # If stream doesn't have a bookmark field or the record doesn't contain the stream's bookmark field
-        if not bookmark_field or (bookmark_field not in transformed_record):
-            return True
-
-        # If the bookmark field value is null, include the record
-        if transformed_record[bookmark_field] is None:
-            return True
-
-        # Keep only records whose bookmark is after the last_datetime
-        if str_to_localized_datetime(transformed_record[bookmark_field]) >= \
-                str_to_localized_datetime(self.last_bookmark_value):
-            return True
         
-        return False
+        # Extract key fields for logging
+        encoded_key = transformed_record.get('encoded_key', 'unknown')
+        due_date = transformed_record.get('due_date')
+        state = transformed_record.get('state')
+        
+        # Debug logging
+        LOGGER.info(f"Processing record with ID: {encoded_key}")
+        LOGGER.info(f"Bookmark field: {bookmark_field}")
+        LOGGER.info(f"Record bookmark value: {transformed_record.get(bookmark_field)}")
+        LOGGER.info(f"Last bookmark value: {self.last_bookmark_value}")
+        LOGGER.info(f"Due date: {due_date}")
+        LOGGER.info(f"Last paid date: {transformed_record.get('last_paid_date')}")
+        LOGGER.info(f"Parent account key: {transformed_record.get('parent_account_key')}")
+        LOGGER.info(f"State: {state}")
+
+        # Always return True to include all records (full load)
+        LOGGER.info("Including record: Full load mode")
+        return True
