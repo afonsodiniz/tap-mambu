@@ -17,7 +17,7 @@ class InstallmentsGenerator(MultithreadedOffsetGenerator):
             "detailsLevel": "FULL",
             "paginationDetails": "OFF"
         }
-        self.endpoint_bookmark_field = "lastPaidDate"
+        self.endpoint_bookmark_field = "dueDate"
 
     def transform_batch(self, batch):
         temp_batch = super(InstallmentsGenerator, self).transform_batch(batch)
