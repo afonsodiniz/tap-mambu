@@ -174,7 +174,7 @@ class MambuClient(object):
         headers['Accept'] = 'application/vnd.mambu.v2+json'
         if use_apikey:
             # Api Key API Consumer Authentication: https://support.mambu.com/docs/api-consumers
-            headers['apikey'] = self.__apikey
+            self.__session.headers['apikey'] = self.__apikey
         else:
             # Basic Authentication: https://api.mambu.com/?http#authentication
             self.__session.auth = (self.__username, self.__password)
